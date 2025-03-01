@@ -1,4 +1,4 @@
-import express from "exoress"
+import express from "express"
 import cors from "cors"
 import cookieParser from "cookie-parser"
 
@@ -15,4 +15,9 @@ app.use(express.static("public"))
 app.use(cookieParser())
 
 
-export { app }
+import userRouter from './routes/User.routes.js'
+
+app.use("/api/v1/users", userRouter)
+
+
+export default app 
