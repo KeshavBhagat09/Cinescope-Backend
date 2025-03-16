@@ -113,7 +113,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
   // }
 
-  
+  // Gulshan se poochna hai ki ye code kyu likha hai
 
   const user = await User.findOne({
     $or: [{ Username }, { email }],
