@@ -1,5 +1,5 @@
-import {asyncHandler} from "../utils/asyncHandler.js";
-import {ApiError} from "../utils/ApiError.js";
+import asyncHandler from "../utils/asyncHandler.js";
+import ApiError from "../utils/ApiError.js";
 import User from "../models/User.model.js";
 import {uploadOnCloudinary} from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
@@ -25,6 +25,15 @@ const generateAccessAndRefereshTokens = async (userId) => {
 };
 
 const registerUser = asyncHandler(async (req, res) => {
+  // get user details from frontend
+  // validation - not empty
+  // check if user already exists: Username, email
+  // check for images, check for avatar
+  // upload them to cloudinary, avatar
+  // create user object - create entry in db
+  // remove password and refresh token field from response
+  // check for user creation
+  // return res
   console.log(req.body);
   const { Username, email, Fullname, password } = req.body;
   console.log("email:", email);
@@ -46,8 +55,10 @@ const registerUser = asyncHandler(async (req, res) => {
 
   console.log("req.files:", req.files);
 
-  const avatarLocalPath = req.files?.avatar[0]?.path;
+  const avatarLocalPath = req.files && req.files.avatar && req.files.avatar[0] ? req.files.avatar[0].path : null;
   //const coverImageLocalPath = req.files?.coverImage[0]?.path;
+  console.log("hello", avatarLocalPath);
+  
 
   let coverImageLocalPath;
   if (
@@ -75,7 +86,7 @@ const registerUser = asyncHandler(async (req, res) => {
     coverImage: coverImage?.url || "",
     email,
     password,
-    Username: Username.toLowerCase(), 
+    Username: Username.toLowerCase(),
   });
   console.log("user", user);
 
@@ -112,8 +123,6 @@ const loginUser = asyncHandler(async (req, res) => {
   //     throw new ApiError(400, "username or email is required")
 
   // }
-
-  // Gulshan se poochna hai ki ye code kyu likha hai
 
   const user = await User.findOne({
     $or: [{ Username }, { email }],
