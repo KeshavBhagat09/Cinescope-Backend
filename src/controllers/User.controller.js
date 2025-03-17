@@ -244,4 +244,5 @@ export{
    registerUser,
    loginUser,
    logoutUser,
+   refreshAccessToken
 }
