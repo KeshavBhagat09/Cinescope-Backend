@@ -4,6 +4,7 @@ import User from "../models/User.model.js";
 import {uploadOnCloudinary} from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
 
 const generateAccessAndRefereshTokens = async (userId) => {
   try {
@@ -491,8 +492,6 @@ const getWatchHistory = asyncHandler(async (req, res) => {
     );
 });
 
-
-
 export{
    registerUser,
    loginUser,
@@ -504,5 +503,5 @@ export{
    updateUserAvatar,
    updateUserCoverImage,
    getUserChannelProfile,
-    getWatchHistory
+   getWatchHistory
 }
