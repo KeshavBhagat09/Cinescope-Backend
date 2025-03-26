@@ -13,7 +13,8 @@ dotenv.config();
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME || "dcm0yakuc",
   api_key: process.env.CLOUDINARY_API_KEY || "111686871396262",
-  api_secret: process.env.CLOUDINARY_API_SECRET || "m7aReiB0WQM674NKkeEq0i23zcg",
+  api_secret:
+    process.env.CLOUDINARY_API_SECRET || "m7aReiB0WQM674NKkeEq0i23zcg",
 });
 
 // Get __dirname equivalent in ES Module

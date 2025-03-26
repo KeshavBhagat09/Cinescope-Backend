@@ -1,7 +1,7 @@
 import Video from "../models/Video.models.js"
 // import {User} from "../models/user.model.js"
 import ApiError from "../utils/ApiError.js"
-import {ApiResponse} from "../utils/ApiRsponse.js"
+import {ApiResponse} from "../utils/ApiResponse.js"
 import asyncHandler from "../utils/asyncHandler.js"
 // import {uploadOnCloudinary} from "../utils/cloudinary.js"
 
@@ -9,7 +9,7 @@ import asyncHandler from "../utils/asyncHandler.js"
 // video.controller.js
 
 const getVideoByTitle = asyncHandler(async (req, res) => {
-  const { title, page = 1, limit = 4 } = req.query; // Get title, page, and limit from query params
+  const { title, page = 1, limit = 5 } = req.query; // Get title, page, and limit from query params
 
   if (!title) {
     throw new ApiError(400, "Title is required");
