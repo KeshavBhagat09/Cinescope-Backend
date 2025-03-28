@@ -4,8 +4,8 @@ import dotenv from "dotenv";
 import { v2 as cloudinary } from "cloudinary";
 import { fileURLToPath } from "url";
 import ApiError from "../utils/ApiError.js";
-import { ApiResponse } from "../utils/ApiRsponse.js";
-import Image from "../models/Image.models.js"; // Import Image model
+import ApiResponse from "../utils/ApiResponse.js";
+import Image from "../models/Image.model.js"; // Import Image model
 import connectDB from "../db/index.js";
 
 dotenv.config();
@@ -22,7 +22,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // ✅ Define image folder path
-const IMAGE_FOLDER = path.join(__dirname, "../../public/img");
+const IMAGE_FOLDER = path.join(__dirname, "../../Public/img");
 
 // Ensure the folder exists
 if (!fs.existsSync(IMAGE_FOLDER)) {
