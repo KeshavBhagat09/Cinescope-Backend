@@ -147,8 +147,10 @@ const loginUser = asyncHandler(async (req, res) => {
 
   const options = {
     httpOnly: true,
-    secure: true,
+    secure: false,
+    sameSite: "Lax" // ✅ Correct key name
   };
+  
 
   return res
     .status(200)
