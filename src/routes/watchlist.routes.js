@@ -6,6 +6,6 @@ const router = express.Router();
 
 router.post("/add", verifyJwt, addToWatchlist); // Add movie to watchlist
 router.get("/", verifyJwt, getWatchlist); // Get user's watchlist
-router.delete("/remove", verifyJwt, removeFromWatchlist); // Remove movie from watchlist
+router.post("/remove", verifyJwt, removeFromWatchlist); // Remove movie from watchlist (POST since it sends data)
 
 export default router;

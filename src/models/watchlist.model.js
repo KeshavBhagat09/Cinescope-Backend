@@ -2,11 +2,11 @@ import mongoose, { Schema } from "mongoose";
 
 const WatchlistItemSchema = new Schema(
   {
-    productId: {
-      type: Schema.Types.ObjectId,
-      ref: "Product", // Reference to Product model
-      required: true,
-    },
+    title: { type: String, required: true },
+    posterUrl: { type: String },
+    rating: { type: String },
+    year: { type: String },
+    type: { type: String },
   },
   { timestamps: true }
 );
@@ -15,11 +15,11 @@ const WatchlistSchema = new Schema(
   {
     userId: {
       type: Schema.Types.ObjectId,
-      ref: "User", // Reference to User model
+      ref: "User",
       required: true,
-      unique: true, // Ensures one watchlist per user
+      unique: true,
     },
-    items: [WatchlistItemSchema], // List of products in watchlist
+    items: [WatchlistItemSchema], // Embedded movie objects
   },
   { timestamps: true }
 );
