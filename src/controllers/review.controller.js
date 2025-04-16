@@ -1,119 +1,115 @@
-import Comment from "../models/review.model.js";
+import Review from "../models/review.model.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 
-// Create a new comment
+// Create a new review
 const createReview = asyncHandler(async (req, res) => {
-  const { content } = req.body;
-  const userId = req.user?._id; // From verifyJwt middleware
+  const { content, movieTitle } = req.body;
+  const userId = req.user?._id;
 
   if (!content || content.trim() === "") {
-    throw new ApiError(400, "Comment content is required");
+    throw new ApiError(400, "Review content is required");
+  }
+  if (!movieTitle || movieTitle.trim() === "") {
+    throw new ApiError(400, "Movie title is required");
   }
 
-  const comment = await Comment.create({
+  const review = await Review.create({
     content: content.trim(),
+    movieTitle: movieTitle.trim(),
     owner: userId,
   });
 
-  if (!comment) {
-    throw new ApiError(500, "Failed to create comment");
+  if (!review) {
+    throw new ApiError(500, "Failed to create review");
   }
 
-  // Populate owner details for response
-  const populatedComment = await Comment.findById(comment._id).populate(
+  const populatedReview = await Review.findById(review._id).populate(
     "owner",
     "username avatar"
   );
 
   return res
     .status(201)
-    .json(
-      new ApiResponse(201, populatedComment, "Comment created successfully")
-    );
+    .json(new ApiResponse(201, populatedReview, "Review created successfully"));
 });
 
-// Update an existing comment
+// Update an existing review
 const updateReview = asyncHandler(async (req, res) => {
-  const { commentId } = req.params;
-  console.log("commentId", req.params);
-  
+  const { reviewId } = req.params;
   const { content } = req.body;
   const userId = req.user?._id;
 
-  if (!commentId) {
-    throw new ApiError(400, "Comment ID is required");
+  if (!reviewId) {
+    throw new ApiError(400, "Review ID is required");
   }
-
   if (!content || content.trim() === "") {
     throw new ApiError(400, "Updated content is required");
   }
 
-  const review = await Comment.findById(commentId);
+  const review = await Review.findById(reviewId);
   if (!review) {
-    throw new ApiError(404, "review not found");
+    throw new ApiError(404, "Review not found");
   }
 
-  // Check if the user owns the comment
   if (review.owner.toString() !== userId.toString()) {
-    throw new ApiError(403, "You are not authorized to update this comment");
+    throw new ApiError(403, "You are not authorized to update this review");
   }
 
-  comment.content = content.trim();
+  review.content = content.trim();
   await review.save();
 
-  // Populate owner details for response
-  const updatedComment = await Comment.findById(review._id).populate(
+  const updatedReview = await Review.findById(review._id).populate(
     "owner",
     "username avatar"
   );
 
   return res
     .status(200)
-    .json(new ApiResponse(200, updatedComment, "Comment updated successfully"));
+    .json(new ApiResponse(200, updatedReview, "Review updated successfully"));
 });
 
-// Delete a comment
+// Delete a review
 const deleteReview = asyncHandler(async (req, res) => {
-  const { ReviewId } = req.params;
- 
+  const { reviewId } = req.params;
   const userId = req.user?._id;
 
-  if (!ReviewIdeviewId) {
-    throw new ApiError(400, "Comment ID is required");
+  if (!reviewId) {
+    throw new ApiError(400, "Review ID is required");
   }
 
-  const review = await Comment.findById(ReviewId);
+  const review = await Review.findById(reviewId);
   if (!review) {
-    throw new ApiError(404, "review not found");
+    throw new ApiError(404, "Review not found");
   }
 
-  // Check if the user owns the comment
   if (review.owner.toString() !== userId.toString()) {
-    throw new ApiError(403, "You are not authorized to delete this comment");
+    throw new ApiError(403, "You are not authorized to delete this review");
   }
 
-  await review.findByIdAndDelete(ReviewId);
+  await Review.findByIdAndDelete(reviewId);
 
   return res
     .status(200)
-    .json(new ApiResponse(200, null, "Comment deleted successfully"));
+    .json(new ApiResponse(200, null, "Review deleted successfully"));
 });
 
-// Get paginated comments (e.g., for a resource)
+// Get paginated reviews for a movie
 const getReviews = asyncHandler(async (req, res) => {
-  const { page = 1, limit = 10 } = req.query;
+  const { page = 1, limit = 10, movieTitle } = req.query;
 
   const options = {
     page: parseInt(page, 10),
     limit: parseInt(limit, 10),
-    sort: { createdAt: -1 }, // Newest first
-    populate: { path: "owner", select: "username avatar" }, // Populate owner details
+    sort: { createdAt: -1 },
+    populate: { path: "owner", select: "username avatar" },
   };
 
-  // Aggregation pipeline (can be customized based on needs)
-  const aggregateQuery = Comment.aggregate([
+  const aggregateQuery = Review.aggregate([
+    {
+      $match: movieTitle ? { movieTitle: movieTitle } : {},
+    },
     {
       $lookup: {
         from: "users",
@@ -126,6 +122,7 @@ const getReviews = asyncHandler(async (req, res) => {
     {
       $project: {
         content: 1,
+        movieTitle: 1,
         createdAt: 1,
         updatedAt: 1,
         "owner.username": 1,
@@ -134,24 +131,24 @@ const getReviews = asyncHandler(async (req, res) => {
     },
   ]);
 
-  const result = await Comment.aggregatePaginate(aggregateQuery, options);
+  const result = await Review.aggregatePaginate(aggregateQuery, options);
 
   if (!result) {
-    throw new ApiError(500, "Failed to fetch comments");
+    throw new ApiError(500, "Failed to fetch reviews");
   }
 
   return res.status(200).json(
     new ApiResponse(
       200,
       {
-        comments: result.docs,
+        reviews: result.docs,
         totalDocs: result.totalDocs,
         page: result.page,
         totalPages: result.totalPages,
         hasNextPage: result.hasNextPage,
         hasPrevPage: result.hasPrevPage,
       },
-      "Comments fetched successfully"
+      "Reviews fetched successfully"
     )
   );
 });

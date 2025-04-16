@@ -22,6 +22,7 @@ import ReviewRouter from './routes/review.routes.js'
 import Watchlist from "./routes/watchlist.routes.js"
 import Rating from "./routes/rating.routes.js"
 
+
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/videos", VideoRouter);
 app.use('/api/v1/images', ImageRouter);

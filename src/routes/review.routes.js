@@ -4,18 +4,17 @@ import {
   createReview,
   updateReview,
   deleteReview,
-  getReviews
+  getReviews,
 } from "../controllers/review.controller.js";
 
 const router = express.Router();
 
 // Protected routes (require authentication)
-router.post("/comment", verifyJwt, createReview); // Create a comment
-router.put("/comment/:commentId", verifyJwt, updateReview); // PUT /api/v1/comments/comment/:commentId
-router.delete("/comment/:commentId", verifyJwt, deleteReview); // DELETE /api/v1/comments/comment/:commentId
+router.post("/review", verifyJwt, createReview);
+router.put("/review/:reviewId", verifyJwt, updateReview);
+router.delete("/review/:reviewId", verifyJwt, deleteReview);
 
-
-// Public or protected route (depending on your needs)
-router.get("/", getReviews); // Get paginated comments
+// Public or protected route
+router.get("/", getReviews);
 
 export default router;
