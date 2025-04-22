@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import { v2 as cloudinary } from "cloudinary";
 import { fileURLToPath } from "url";
 import ApiError from "../utils/ApiError.js";
-import { ApiResponse } from "../utils/ApiResponse.js";
+import ApiResponse from "../utils/ApiResponse.js";
 import Video from "../models/Video.models.js"; // Import Video model
 import connectDB from "../db/index.js";
 dotenv.config();
